@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deploy | KHAN-MD VPS BOT</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(#0f172a, #0c1022);
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      color: #0ff;
+      font-size: 3rem;
+      margin-bottom: 10px;
+    }
+
+    .container {
+      background: #1e293b;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 30px #0ff4;
+      max-width: 500px;
+      width: 100%;
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      border-radius: 8px;
+      border: none;
+      padding: 10px;
+      font-family: monospace;
+      background: #0f172a;
+      color: #fff;
+    }
+    input[type="file"], button {
+      margin-top: 15px;
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    input[type="file"] {
+      background-color: #334155;
+      color: #fff;
+    }
+
+    button {
+      background-color: #0ff;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
+      color: #0ff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>DEPLOY</h1>
+  <div class="container">
+    <label for="config">Edit config.js:</label>
+    <textarea id="config">// Edit this config...</textarea>
+    <input type="file" id="zipFile" />
+    <button onclick="deployBot()">Deploy</button>
+    <p class="message" id="message"></p>
+    <a href="view-bots.html">View Bots</a>
+  </div>
+
+  <script>
+    async function deployBot() {
+      const code = document.getElementById('config').value;
+      const fileInput = document.getElementById('zipFile');
+      const message = document.getElementById('message');
+
+      if (!fileInput.files[0]) {
+        message.innerText = "Please select a ZIP file.";
+        return;
+    }
+      const formData = new FormData();
+      formData.append('zipUrl', 'custom'); // If sending URL
+      formData.append('code', code);
+
+      try {
+        const res = await fetch('https://unpleasant-tiphany-lmk-organazation-c4dbce92.koyeb.app/deploy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+
+        const data = await res.json();
+        message.innerText = data.message || "Deployment done!";
+      } catch (err) {
+        message.innerText = "Error: " + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
